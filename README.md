@@ -8,7 +8,6 @@ Built using the **Electron Framework**, SAM provides a dedicated interface for r
 
 The application is currently under active development, with ongoing improvements to functionality, reliability and hardware integration.
 
----
 
 ## Features
 
@@ -21,7 +20,6 @@ The application is currently under active development, with ongoing improvements
 
 > **Development Notice:** SAM Companion App is still under development. Some features may be incomplete, experimental or require further testing with physical hardware.
 
----
 
 ## Installation
 
