@@ -1,0 +1,118 @@
+{
+  "name": "sam-search-assist-machine",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "SAM – Search and Assist Machine: Emergency response command system for the Unitree Go2",
+  "author": "SAM Development Team",
+  "scripts": {
+    "start": "vite build --base ./ && electron .",
+    "dev": "vite",
+    "build": "vite build --base ./",
+    "build:dev": "vite build --mode development",
+    "dist": "vite build --base ./ && electron-builder --win nsis --x64",
+    "dist:portable": "vite build --base ./ && electron-builder --win portable --x64",
+    "dist:mac": "vite build --base ./ && electron-builder --mac --x64",
+    "dist:linux": "vite build --base ./ && electron-builder --linux AppImage --x64",
+    "pack": "vite build --base ./ && npx @electron/packager . SAM --platform=win32 --arch=x64 --out=release --overwrite --ignore=node_modules --ignore=^/src --ignore=^/public --ignore=^/release",
+    "electron": "vite build --base ./ && electron .",
+    "lint": "eslint .",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "build": {
+    "appId": "com.sam.searchassist",
+    "productName": "SAM",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*",
+      "electron/**/*",
+      "public/sam-logo.png",
+      "package.json"
+    ],
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "gre23207212",
+        "repo": "remix-of-sam-commander"
+      }
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "build/sam.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "SAM",
+      "menuCategory": "SAM",
+      "runAfterFinish": true,
+      "deleteAppDataOnUninstall": false,
+      "allowElevation": true,
+      "displayLanguageSelector": false,
+      "installerLanguages": [
+        "en_US"
+      ],
+      "language": "1033",
+      "uninstallDisplayName": "SAM – Search and Assist Machine",
+      "artifactName": "SAM-Setup-${version}.${ext}",
+      "installerHeaderIcon": "build/sam.ico",
+      "uninstallerIcon": "build/sam.ico",
+      "installerIcon": "build/sam.ico",
+      "license": "build/license.txt",
+      "include": "build/installer.nsh",
+      "warningsAsErrors": false
+    },
+    "mac": {
+      "target": "dmg",
+      "icon": "public/sam-logo.png",
+      "category": "public.app-category.utilities"
+    },
+    "linux": {
+      "target": "AppImage",
+      "icon": "public/sam-logo.png",
+      "category": "Utility"
+    },
+    "compression": "maximum"
+  },
+  "dependencies": {
+    "@tensorflow-models/coco-ssd": "^2.2.3",
+    "@tensorflow/tfjs": "^4.22.0",
+    "node-forge": "^1.4.0",
+    "three": "^0.160.0",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@electron/packager": "^19.1.0",
+    "@eslint/js": "^9.32.0",
+    "@testing-library/jest-dom": "^6.6.0",
+    "@types/node": "^22.16.5",
+    "autoprefixer": "^10.4.21",
+    "drizzle-kit": "0.x",
+    "drizzle-orm": "0.x",
+    "electron": "^41.2.0",
+    "electron-builder": "^24.13.3",
+    "eslint": "^9.32.0",
+    "globals": "^15.15.0",
+    "jsdom": "^20.0.3",
+    "postcss": "^8.5.6",
+    "postgres": "^4.1.1",
+    "typescript": "^5.8.3",
+    "vite": "^5.4.19",
+    "vitest": "^3.2.4"
+  },
+  "main": "electron/main.cjs"
+}

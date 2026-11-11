@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      overflow: hidden;
+      -webkit-app-region: drag;
+    }
+    .container {
+      width: 460px;
+      height: 360px;
+      background: radial-gradient(ellipse at center, #0f1520 0%, #080c12 100%);
+      border: 1px solid rgba(234, 130, 30, 0.15);
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+    /* Tactical grid */
+    .container::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(234, 130, 30, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(234, 130, 30, 0.03) 1px, transparent 1px);
+      background-size: 20px 20px;
+      pointer-events: none;
+    }
+    /* Scanlines */
+    .container::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg, transparent, transparent 2px,
+        rgba(234, 130, 30, 0.02) 2px, rgba(234, 130, 30, 0.02) 4px
+      );
+      pointer-events: none;
+    }
+
+    .logo {
+      width: 100px;
+      height: 100px;
+      z-index: 1;
+      filter: drop-shadow(0 0 30px rgba(234, 130, 30, 0.4));
+      animation: logoPulse 3s ease-in-out infinite;
+    }
+
+    @keyframes logoPulse {
+      0%, 100% { transform: scale(1); filter: drop-shadow(0 0 30px rgba(234, 130, 30, 0.4)); }
+      50% { transform: scale(1.05); filter: drop-shadow(0 0 50px rgba(234, 130, 30, 0.5)); }
+    }
+
+    .title {
+      margin-top: 24px;
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: 0.4em;
+      color: #ea821e;
+      text-shadow: 0 0 20px rgba(234, 130, 30, 0.5);
+      z-index: 1;
+    }
+    .subtitle {
+      margin-top: 6px;
+      font-size: 10px;
+      letter-spacing: 0.3em;
+      color: rgba(160, 170, 185, 0.7);
+      z-index: 1;
+      opacity: 0;
+      animation: fadeIn 0.5s 1s forwards;
+    }
+
+    .progress-container {
+      margin-top: 30px;
+      width: 200px;
+      height: 3px;
+      background: rgba(234, 130, 30, 0.1);
+      border-radius: 3px;
+      overflow: hidden;
+      z-index: 1;
+      opacity: 0;
+      animation: fadeIn 0.5s 1.5s forwards;
+    }
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #ea821e, #f5a623);
+      border-radius: 3px;
+      box-shadow: 0 0 10px rgba(234, 130, 30, 0.5);
+      animation: progressFill 13s 2s ease-out forwards;
+    }
+
+    .status {
+      margin-top: 12px;
+      font-size: 9px;
+      letter-spacing: 0.15em;
+      color: rgba(234, 130, 30, 0.5);
+      font-family: 'Consolas', 'Courier New', monospace;
+      z-index: 1;
+      opacity: 0;
+      animation: fadeIn 0.3s 2s forwards;
+    }
+
+    .version {
+      position: absolute;
+      bottom: 16px;
+      font-size: 8px;
+      letter-spacing: 0.2em;
+      color: rgba(160, 170, 185, 0.25);
+      z-index: 1;
+    }
+
+    @keyframes fadeIn { to { opacity: 1; } }
+    @keyframes progressFill { to { width: 100%; } }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <img src="../public/sam-logo.png" class="logo" alt="SAM" />
+    <div class="title">S A M</div>
+    <div class="subtitle">SEARCH AND ASSIST MACHINE</div>
+    <div class="progress-container">
+      <div class="progress-bar"></div>
+    </div>
+    <div class="status" id="status">INITIALIZING SYSTEMS...</div>
+    <div class="version">v1.0</div>
+  </div>
+
+  <script>
+    const messages = [
+      { text: 'LOADING CORE MODULES...', time: 3000 },
+      { text: 'CONTROLLER INTERFACE: STANDBY', time: 5000 },
+      { text: 'MAPPING ENGINE: LOADED', time: 7000 },
+      { text: 'ALERT SYSTEM: ACTIVE', time: 9000 },
+      { text: 'SDK DETECTED: UNITREE GO2', time: 11000 },
+      { text: 'SYSTEM READY', time: 13500 },
+    ];
+    const el = document.getElementById('status');
+    messages.forEach(m => setTimeout(() => { el.textContent = m.text; }, m.time));
+  </script>
+</body>
+</html>

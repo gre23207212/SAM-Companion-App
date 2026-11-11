@@ -1,0 +1,21 @@
+import template from './templates/settings.html?raw';
+import {html,byText,scope,toast,icon} from './dom.js';
+import {controlsCard} from './profiles.js';
+import {getRobotState,setRobotIp} from '../lib/robot-store.js';
+import {connectRobot,disconnectLink,getLinkState,subscribeLink} from '../lib/go2-link.js';
+import {THEMES,FONTS,applyTheme,getThemeState,subscribeTheme} from '../lib/theme-store.js';
+import {clearAlerts} from '../lib/alerts-store.js';
+export function settingsPage(){
+ const node=html(template),life=scope(),cards=node.firstElementChild.children,linkCard=cards[1],appearance=cards[2],controls=cards[3];
+ life.add(controlsCard(controls));
+ const ip=node.querySelector('[aria-label="Robot IP address"]');ip.value=getRobotState().robotIp;
+ const presetButtons=linkCard.querySelectorAll('.grid button');presetButtons.forEach((btn,i)=>btn.onclick=()=>{ip.value=i?'192.168.123.161':'192.168.12.1';setRobotIp(ip.value);refresh();});
+ const connect=byText(linkCard,'button','Connect');
+ connect.onclick=async()=>{if(getLinkState().status==='online'){disconnectLink();toast({title:'Disconnected from robot'});return;}const target=ip.value.trim();if(!/^\d{1,3}(\.\d{1,3}){3}$/.test(target)){toast({title:"That doesn't look like an IP address",description:'Example: 192.168.12.1',variant:'destructive'});return;}setRobotIp(target);const ok=await connectRobot(target);toast(ok?{title:'Connected to Go2',description:target}:{title:'Connection failed',description:getLinkState().error||"The robot didn't answer at that address.",variant:'destructive'});};
+ const error=html('<p class="text-[11px] text-destructive"></p>');linkCard.lastElementChild.append(error);
+ function refresh(){const link=getLinkState(),online=link.status==='online',busy=['connecting','validating'].includes(link.status);ip.disabled=online||busy;connect.disabled=busy;connect.innerHTML=icon(online?'unplug':busy?'loader-circle':'wifi',12)+(online?' Disconnect':busy?link.step||'Connecting…':' Connect');connect.className=online?'h-10 px-4 rounded-lg text-xs font-medium bg-destructive/10 text-destructive border border-destructive/40 flex items-center gap-2':'h-10 px-4 rounded-lg text-xs font-semibold gradient-primary text-primary-foreground flex items-center gap-2 disabled:opacity-60';const pill=linkCard.firstElementChild.querySelector('span.rounded-full');if(pill){pill.textContent=online?'Online':busy?'Connecting':link.status==='error'?'Error':'Not linked';pill.className=`text-[10px] font-mono px-2.5 py-0.5 rounded-full border ${online?'bg-success/10 text-success border-success/30':busy?'bg-warning/10 text-warning border-warning/30':link.status==='error'?'bg-destructive/10 text-destructive border-destructive/30':'bg-secondary text-muted-foreground border-border/50'}`;}presetButtons.forEach((btn,i)=>{btn.disabled=online||busy;btn.className=`text-left rounded-xl border p-3 transition-all disabled:opacity-60 ${ip.value===(i?'192.168.123.161':'192.168.12.1')?'border-primary/60 bg-primary/10':'border-border/60 bg-secondary/30 hover:border-primary/40'}`;});error.textContent=link.status==='error'?link.error??'':'';}
+ const themeButtons=appearance.querySelectorAll('.grid button'),fontButtons=appearance.querySelectorAll('.flex.flex-wrap button');
+ Object.keys(THEMES).forEach((id,i)=>themeButtons[i].onclick=()=>applyTheme({theme:id}));Object.keys(FONTS).forEach((id,i)=>fontButtons[i].onclick=()=>applyTheme({font:id}));
+ const appearanceRefresh=()=>{const state=getThemeState();Object.keys(THEMES).forEach((id,i)=>themeButtons[i].className=`rounded-lg border px-3 py-2 text-xs text-left ${state.theme===id?'border-primary/60 bg-primary/10 text-foreground':'border-border/60 bg-secondary/30 text-muted-foreground hover:text-foreground'}`);Object.keys(FONTS).forEach((id,i)=>fontButtons[i].className=`rounded-lg border px-3 py-2 text-xs ${state.font===id?'border-primary/60 bg-primary/10 text-foreground':'border-border/60 bg-secondary/30 text-muted-foreground hover:text-foreground'}`);};
+ byText(node,'button','Clear').onclick=()=>{clearAlerts();toast({title:'Alerts cleared'});};life.add(subscribeTheme(appearanceRefresh));life.add(subscribeLink(refresh));refresh();appearanceRefresh();return {node,destroy:()=>life.destroy()};
+}
