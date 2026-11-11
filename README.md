@@ -125,7 +125,6 @@ npm run dist
 
 > **Important:** Avoid using `npm audit fix --force` without reviewing the dependency changes. It may install incompatible versions and cause build errors.
 
----
 
 ## Connecting to Your Robot
 
@@ -171,7 +170,6 @@ A successful ping does not necessarily confirm that robot control services are a
 4. Check the connection status.
 5. Verify that the robot is responding correctly before attempting movement.
 
----
 
 ## Controls
 
@@ -196,7 +194,6 @@ A successful ping does not necessarily confirm that robot control services are a
 
 > **Safety:** Software stop commands are not a replacement for physical emergency controls or manufacturer safety procedures.
 
----
 
 ## Compatibility
 
@@ -211,7 +208,6 @@ Compatibility with other Unitree robots and firmware versions has not been offic
 
 The application can be launched without a connected robot, but live robot functionality requires compatible hardware.
 
----
 
 ## Development Status
 
@@ -229,7 +225,6 @@ SAM Companion App is an ongoing project, with development currently focused on:
 
 Features may change as development progresses.
 
----
 
 ## Safety Information
 
