@@ -241,7 +241,9 @@ When using the application:
 
 ## Credits and Thanks
 abizovnuralem – Original creator of the third-party Unitree Go2 SDK used as part of SAM Companion App
+
 SirBlobby - LiDAR mapping implementation and related development work incorporated into SAM Companion App
+
 Unitree Robotics - Original manufacturer and designer of the Unitree Go2 robot dog
 
 **SAM Companion App is an independent project and is not an official Unitree application.**
